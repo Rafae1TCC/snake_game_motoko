@@ -1,29 +1,27 @@
 {
   "canisters": {
     "internet_identity": {
+      "type": "custom",
+      "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz",
       "candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
-      "frontend": {},
       "remote": {
         "id": {
           "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
         }
-      },
-      "type": "custom",
-      "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz"
+      }
     },
     "snake_game_backend": {
       "main": "src/snake_game_backend/main.mo",
       "type": "motoko"
     },
     "snake_game_frontend": {
-      "dependencies": [
-        "snake_game_backend"
-      ],
+      "type": "assets",
       "source": [
         "src/snake_game_frontend/dist"
       ],
-      "type": "assets",
-      "workspace": "snake_game_frontend"
+      "dependencies": [
+        "snake_game_backend"
+      ]
     }
   },
   "defaults": {
