@@ -29,9 +29,9 @@ actor SnakeGameBackend {
 
             if (Array.size<ScoreRecord>(highScores) > 1) {
                 highScores := Array.sort<ScoreRecord>(highScores, func (a: ScoreRecord, b: ScoreRecord): Order.Order { 
-                    if (a.score > b.score) {
+                    if (a.score < b.score) {
                         #greater
-                    } else if (a.score < b.score) {
+                    } else if (a.score > b.score) {
                         #less
                     } else {
                         #equal
