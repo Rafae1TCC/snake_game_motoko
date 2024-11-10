@@ -10,7 +10,7 @@ export default defineConfig({
     emptyOutDir: true,
   },
   optimizeDeps: {
-    include: ["@dfinity/auth-client"], // Incluye @dfinity/auth-client aquí
+    include: ["@dfinity/auth-client"],
     esbuildOptions: {
       define: {
         global: "globalThis",

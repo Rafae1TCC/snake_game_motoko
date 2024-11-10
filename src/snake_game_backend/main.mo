@@ -10,19 +10,20 @@ actor SnakeGameBackend {
     type ScoreRecord = {
         userId: Principal;
         score: Nat;
+        username: Text;
     };
 
     stable var highScores: [ScoreRecord] = [];
 
     // Guardar puntuación y actualizar el listado si es un high score
-    public func saveScore(userId: Principal, score: Nat): async Bool {
+    public func saveScore(userId: Principal, score: Nat, username: Text,): async Bool {
         Debug.print("Intentando guardar la puntuación: " # Nat.toText(score));
         Debug.print("Tamaño actual de highScores antes de añadir: " # Nat.toText(Array.size<ScoreRecord>(highScores)));
 
         // Verificar si la puntuación califica entre los top 10
         if (Array.size<ScoreRecord>(highScores) < 10 or Array.find<ScoreRecord>(highScores, func (record: ScoreRecord): Bool { score > record.score }) != null) {
             // Crear el nuevo record
-            let newScoreRecord: ScoreRecord = { userId = userId; score = score };
+            let newScoreRecord: ScoreRecord = { userId = userId; score = score; username = username };
 
             // Añadir el nuevo record al arreglo y verificar el tamaño antes de ordenar
             highScores := Array.append<ScoreRecord>([newScoreRecord], highScores);
