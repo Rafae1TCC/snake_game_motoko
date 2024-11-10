@@ -8,11 +8,9 @@ dotenv.config({ path: '../../.env' });
 export default defineConfig({
   build: {
     emptyOutDir: true,
-    rollupOptions: {
-      external: ['@dfinity/auth-client'], // Agregar `@dfinity/auth-client` como dependencia externa
-    },
   },
   optimizeDeps: {
+    include: ["@dfinity/auth-client"], // Incluye @dfinity/auth-client aquí
     esbuildOptions: {
       define: {
         global: "globalThis",
