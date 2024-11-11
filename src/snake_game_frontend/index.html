@@ -18,6 +18,9 @@
     <div class="container game-container">
         <h1 class="text-center my-3">Snake Game</h1>
         <button id="loginBtn" class="btn btn-info btn-block mb-3">Iniciar sesión con Internet Identity</button>
+        <div id="instructions" style="font-size: 20px; text-align: center; margin-top: 20px;">
+            Presiona las teclas "A, W, S, D" o las flechas de dirección para comenzar a jugar
+          </div>
         <div id="authMessage" class="text-center text-warning mb-3" style="display: none;">
             Para poder guardar tus puntuaciones, primero inicia sesión con Internet Identity.
         </div>
@@ -25,7 +28,7 @@
         <!-- Mostrar el ID de Internet Identity del usuario -->
         <div id="userIdDisplay" class="text-center text-light mb-3"></div>
 
-        <input type="text" id="usernameInput" class="form-control mb-3" placeholder="Aqui se asinara tu nombre" maxlength="5">
+        <input type="text" id="usernameInput" class="form-control mb-3" placeholder="Aqui se asignara tu nombre" maxlength="5">
         <canvas id="gameCanvas" width="400" height="400"></canvas>
         <h2 class="text-center mt-3">Puntuación: <span id="score">0</span></h2>
     </div>

@@ -65,10 +65,27 @@ function resetGame() {
 
 // Control de dirección
 document.addEventListener('keydown', event => {
-  switch (event.key) {
-    case 'ArrowUp': direction = { x: 0, y: -1 }; break;
-    case 'ArrowDown': direction = { x: 0, y: 1 }; break;
-    case 'ArrowLeft': direction = { x: -1, y: 0 }; break;
-    case 'ArrowRight': direction = { x: 1, y: 0 }; break;
-  }
-});
+    switch (event.key) {
+      case 'ArrowUp':
+      case 'w': 
+      case 'W': 
+        direction = { x: 0, y: -1 };
+        break;
+      case 'ArrowDown':
+      case 's': 
+      case 'S': 
+        direction = { x: 0, y: 1 };
+        break;
+      case 'ArrowLeft':
+      case 'a': 
+      case 'A': 
+        direction = { x: -1, y: 0 };
+        break;
+      case 'ArrowRight':
+      case 'd': 
+      case 'D': 
+        direction = { x: 1, y: 0 };
+        break;
+    }
+  });
+  
