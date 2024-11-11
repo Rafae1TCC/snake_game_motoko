@@ -36,28 +36,37 @@ export async function login() {
 
 // Maneja el estado autenticado del usuario
 async function handleAuthenticated(client) {
-  console.log("Autenticación exitosa");
   userPrincipal = client.getIdentity().getPrincipal();
-
-  // Crear el actor del backend con el usuario autenticado
   backendActor = createActor(backendCanisterId, {
-    agentOptions: { identity: client.getIdentity() },
+      agentOptions: { identity: client.getIdentity() },
   });
 
-  document.getElementById("loginBtn").innerText = `Bienvenido ${userPrincipal.toText()}`;
-  document.getElementById("authMessage").style.display = "none";
-  document.getElementById("usernameInput").disabled = false;
+  // Mostrar el ID de Internet Identity del usuario
+  const userIdDisplay = document.getElementById("userIdDisplay");
+  userIdDisplay.innerText = `Tu ID de Internet Identity es: ${userPrincipal}`;
 
-  // Agrega un evento para ingresar el nombre solo una vez
-  document.getElementById("usernameInput").addEventListener("change", (event) => {
-    username = event.target.value.slice(0, 5); // Limita el nombre a 5 caracteres
-    event.target.value = username;
-    event.target.disabled = true; // Deshabilita el campo después de ingresar el nombre
-  });
+  // Obtener o asignar un nombre al usuario en el backend
+  username = await backendActor.getOrSetUsername(userPrincipal, "Jugador_" + userPrincipal.toText().slice(-4));
 
-  // Cargar high scores al iniciar sesión
+  const usernameInput = document.getElementById("usernameInput");
+
+  // Si ya tiene nombre asignado, lo carga y lo bloquea
+  if (username) {
+    usernameInput.value = username;
+    usernameInput.disabled = true; // Bloquea el campo después de establecer el nombre
+  } else {
+    usernameInput.disabled = false;
+    usernameInput.addEventListener("change", (event) => {
+      username = event.target.value.slice(0, 5);
+      event.target.value = username;
+      event.target.disabled = true;
+      localStorage.setItem("username", username); // Guarda el nombre en el localStorage
+    });
+  }
+
   fetchHighScores();
 }
+
 
 // Guarda el puntaje en el backend automáticamente al perder
 export async function saveScore(score) {
@@ -73,18 +82,20 @@ export async function saveScore(score) {
 // Obtiene y muestra los "high scores"
 export async function fetchHighScores() {
   try {
-    const highScores = await backendActor.getHighScores();
-    const highScoresList = document.getElementById("highScoresList");
-    highScoresList.innerHTML = "";
-    highScores.forEach(record => {
-      const listItem = document.createElement("li");
-      listItem.textContent = `Usuario: ${record.username}, Puntuación: ${record.score}`;
-      highScoresList.appendChild(listItem);
-    });
+      const highScores = await backendActor.getHighScores();
+      const highScoresList = document.getElementById("highScoresList");
+      highScoresList.innerHTML = "";
+      highScores.forEach(record => {
+          const listItem = document.createElement("li");
+          listItem.className = "list-group-item bg-dark text-light";
+          listItem.textContent = `Usuario: ${record.username}, Puntuación: ${record.score}`;
+          highScoresList.appendChild(listItem);
+      });
   } catch (error) {
-    console.error("Error al obtener high scores:", error);
+      console.error("Error al obtener high scores:", error);
   }
 }
+
 
 // Inicializa la autenticación al cargar
 window.onload = initAuth;

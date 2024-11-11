@@ -2,8 +2,8 @@ import Principal "mo:base/Principal";
 import Array "mo:base/Array";
 import Iter "mo:base/Iter";
 import Order "mo:base/Order";
-import Debug "mo:base/Debug";
 import Nat "mo:base/Nat";
+import HashMap "mo:base/HashMap";
 
 actor SnakeGameBackend {
 
@@ -13,12 +13,13 @@ actor SnakeGameBackend {
         username: Text;
     };
 
+    // Creamos un HashMap para almacenar nombres de usuario, donde la clave es Principal y el valor es Text
+    var userNames = HashMap.HashMap<Principal, Text>(128, Principal.equal, Principal.hash);
+
     stable var highScores: [ScoreRecord] = [];
 
     // Guardar puntuación y actualizar el listado si es un high score
-    public func saveScore(userId: Principal, score: Nat, username: Text,): async Bool {
-        Debug.print("Intentando guardar la puntuación: " # Nat.toText(score));
-        Debug.print("Tamaño actual de highScores antes de añadir: " # Nat.toText(Array.size<ScoreRecord>(highScores)));
+    public func saveScore(userId: Principal, score: Nat, username: Text): async Bool {
 
         // Verificar si la puntuación califica entre los top 10
         if (Array.size<ScoreRecord>(highScores) < 10 or Array.find<ScoreRecord>(highScores, func (record: ScoreRecord): Bool { score > record.score }) != null) {
@@ -45,12 +46,9 @@ actor SnakeGameBackend {
                 highScores := Iter.toArray<ScoreRecord>(Array.slice<ScoreRecord>(highScores, 0, 10));
             };
 
-            Debug.print("Tamaño de highScores después de ordenar y cortar: " # Nat.toText(Array.size<ScoreRecord>(highScores)));
-
             return true;
         };
 
-        Debug.print("La puntuación no califica para el top 10.");
         return false;
     };
 
@@ -58,4 +56,19 @@ actor SnakeGameBackend {
     public query func getHighScores(): async [ScoreRecord] {
         return highScores;
     };
+
+    // Función para obtener el nombre de usuario del principal, si no tiene uno, lo asigna
+    public func getOrSetUsername(userId: Principal, username: Text): async Text {
+        // Buscar si ya existe el nombre de usuario para este principal
+        switch (userNames.get(userId)) {
+            case (?existingUsername) {
+                return existingUsername;
+            };
+            case (_) {
+                // Si no existe, asignar el nuevo nombre de usuario
+                userNames.put(userId, username);
+                return username;
+            };
+        };
+    }
 }
